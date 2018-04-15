@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-04-12T22:05:26+08:00</updated><id>http://localhost:4000/</id><title type="html">Your awesome title</title><subtitle>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.</subtitle><entry><title type="html">Git常用操作</title><link href="http://localhost:4000/jekyll/update/2018/03/28/git-notes.html" rel="alternate" type="text/html" title="Git常用操作" /><published>2018-03-28T20:00:12+08:00</published><updated>2018-03-28T20:00:12+08:00</updated><id>http://localhost:4000/jekyll/update/2018/03/28/git-notes</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2018/03/28/git-notes.html">&lt;blockquote&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.7.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2018-04-15T15:14:25+08:00</updated><id>http://localhost:4000/</id><title type="html">墙泥 Blog – a Programmer, a Traveller.</title><subtitle>A Blog sharing my daily programming work, major on PHP, JAVA, MySQL, PHPUnit Test, Spring Test.</subtitle><author><name>Johnny Chen - 强尼陈</name></author><entry><title type="html">Git常用操作</title><link href="http://localhost:4000/jekyll/update/2018/03/28/git-notes.html" rel="alternate" type="text/html" title="Git常用操作" /><published>2018-03-28T20:00:12+08:00</published><updated>2018-03-28T20:00:12+08:00</updated><id>http://localhost:4000/jekyll/update/2018/03/28/git-notes</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2018/03/28/git-notes.html">&lt;blockquote&gt;
   &lt;p&gt;以下是一些远端操作：&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -104,4 +104,56 @@
 
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#将指定分支合并到当前分支中&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;git&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;merge&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;branch_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><summary type="html">以下是一些远端操作：</summary></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Johnny Chen - 强尼陈</name></author><summary type="html">以下是一些远端操作：</summary></entry><entry><title type="html">微信支付对接</title><link href="http://localhost:4000/jekyll/update/2018/03/17/wechat-pay-integration.html" rel="alternate" type="text/html" title="微信支付对接" /><published>2018-03-17T16:13:12+08:00</published><updated>2018-03-17T16:13:12+08:00</updated><id>http://localhost:4000/jekyll/update/2018/03/17/wechat-pay-integration</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2018/03/17/wechat-pay-integration.html">&lt;blockquote&gt;
+  &lt;p&gt;本文记录一下微信支付接入过程中踩过的坑。总体来说，微信支付对于想要接入他们的开发人员的所提供的文档有许多不足，很多流程上的介绍让开发人员一头雾水。经过本次对接，记录下过程中的疑问和解决办法，以备后人使用。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;首先明确的是，我们本次接入的是微信支付的 &lt;strong&gt;&lt;a href=&quot;https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=6_1&quot;&gt;扫码支付&lt;/a&gt;&lt;/strong&gt; 功能&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;1-下载微信官方的支付sdk&quot;&gt;1. 下载微信官方的&lt;a href=&quot;https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=11_1&quot;&gt;支付SDK&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;由于我们是使用JAVA版本的SDK，因此可以直接使用微信官方提供的maven依赖:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&amp;lt;dependency&amp;gt;
+    &amp;lt;groupId&amp;gt;com.github.wxpay&amp;lt;/groupId&amp;gt;
+    &amp;lt;artifactId&amp;gt;wxpay-sdk&amp;lt;/artifactId&amp;gt;
+    &amp;lt;version&amp;gt;0.0.3&amp;lt;/version&amp;gt;
+&amp;lt;/dependency&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;2-着手开发前需要了解的一些信息&quot;&gt;2. 着手开发前需要了解的一些信息：&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;微信支付要求对接的商家在开发阶段首先必须完成一系列的&lt;code class=&quot;highlighter-rouge&quot;&gt;功能验收用例&lt;/code&gt;才可以&lt;code class=&quot;highlighter-rouge&quot;&gt;申请验收完成&lt;/code&gt;并上线功能。&lt;/li&gt;
+  &lt;li&gt;基本流程和概念可以在官方的文档中了解: &lt;a href=&quot;https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=23_1&quot;&gt;验收指引&lt;/a&gt;；&lt;/li&gt;
+  &lt;li&gt;开发过程中所有的操作调用都必须使用沙箱环境的接口，也就是&lt;code class=&quot;highlighter-rouge&quot;&gt;url中加上/sandboxnew/&lt;/code&gt;的路径接口；&lt;/li&gt;
+  &lt;li&gt;沙箱环境下的Sign Key和正式环境下的SignKey是不同的，所以，在接下来的开发过程中，首先你要&lt;a href=&quot;http://wiki.tapcash.com/wechat-pay/#%E6%B2%99%E7%AE%B1%E7%8E%AF%E5%A2%83%E7%9A%84SignKey%E7%94%9F%E6%88%90&quot;&gt;生成一个用于沙箱环境的sign key&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;开发过程中的接口调用必须严格按照&lt;a href=&quot;https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=23_12&quot;&gt;验收用例&lt;/a&gt;中的要求进行调用，例如：下单接口的支付金额必须是指定的金额，比如3.01元，&lt;code class=&quot;highlighter-rouge&quot;&gt;否则是不会支付成功的&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;3-开始开发代码&quot;&gt;3. 开始开发代码：&lt;/h4&gt;
+&lt;p&gt;了解了上面的信息以后，就可以按照官方SDK中的demo进行接口调用和业务逻辑开发啦。&lt;/p&gt;
+
+&lt;h4 id=&quot;4-开发完成开始验收&quot;&gt;4. 开发完成，开始验收：&lt;/h4&gt;
+&lt;p&gt;实现了官方的验收用例中除了可选case之外的所有case后，关注&lt;a href=&quot;https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=23_12&quot;&gt;验收用例&lt;/a&gt;中的二维码 -&amp;gt; “微信支付商户验收助手”，选择&lt;code class=&quot;highlighter-rouge&quot;&gt;我的验收&lt;/code&gt;，然后&lt;code class=&quot;highlighter-rouge&quot;&gt;绑定你的商户&lt;/code&gt;，开始在本地一个一个把用例文档中的case执行一遍，微信的这个验收助手可以&lt;code class=&quot;highlighter-rouge&quot;&gt;实时的显示你的验收结果&lt;/code&gt;，是否成功，如果出错的话错在哪里，一时找不到原因的话，可以先跑别的用例，&lt;code class=&quot;highlighter-rouge&quot;&gt;没有要求一定要按照顺序&lt;/code&gt;完成用例，只要把所有的必选用例都通过就可以了。&lt;/p&gt;
+
+&lt;h4 id=&quot;5-正式上线支付功能&quot;&gt;5. 正式上线支付功能：&lt;/h4&gt;
+&lt;p&gt;完成了所有必选用例的验收以后，等待3个工作日，就可以把你的代码中的useSandbox设置为false，使用&lt;code class=&quot;highlighter-rouge&quot;&gt;正式的key&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;正式的接口&lt;/code&gt;，尝试支付&lt;code class=&quot;highlighter-rouge&quot;&gt;任意金额&lt;/code&gt;看看是否可以成功啦！如果成功，证明你已经通过了微信官方的验收，已经正式可以上线你的支付功能了！&lt;/p&gt;
+
+&lt;h4 id=&quot;附沙箱环境的sign-key生成&quot;&gt;附：沙箱环境的Sign Key生成&lt;/h4&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;使用官方提供的&lt;a href=&quot;https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=20_1&quot;&gt;签名校验工具&lt;/a&gt;生成一个sign值：&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#xml源串&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xml&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mch_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;你的微信后台配置中的商户&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mch_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nonce_str&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;任意随机串&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nonce_str&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sign&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;任意随机串&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sign&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xml&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#校验结果：&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;原&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sign&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;值&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;你填写的任意随机值&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;新&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sign&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;值&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;这就是你的沙箱环境的&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sign&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;了！把它记下来，在接下来的开发过程中你都要用到它&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name>Johnny Chen - 强尼陈</name></author><summary type="html">本文记录一下微信支付接入过程中踩过的坑。总体来说，微信支付对于想要接入他们的开发人员的所提供的文档有许多不足，很多流程上的介绍让开发人员一头雾水。经过本次对接，记录下过程中的疑问和解决办法，以备后人使用。</summary></entry></feed>

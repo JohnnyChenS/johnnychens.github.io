@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.4.0 -->
+<title>微信支付对接 | 墙泥 Blog – a Programmer, a Traveller.</title>
+<meta name="generator" content="Jekyll v3.7.3" />
+<meta property="og:title" content="微信支付对接" />
+<meta name="author" content="Johnny Chen - 强尼陈" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="本文记录一下微信支付接入过程中踩过的坑。总体来说，微信支付对于想要接入他们的开发人员的所提供的文档有许多不足，很多流程上的介绍让开发人员一头雾水。经过本次对接，记录下过程中的疑问和解决办法，以备后人使用。" />
+<meta property="og:description" content="本文记录一下微信支付接入过程中踩过的坑。总体来说，微信支付对于想要接入他们的开发人员的所提供的文档有许多不足，很多流程上的介绍让开发人员一头雾水。经过本次对接，记录下过程中的疑问和解决办法，以备后人使用。" />
+<link rel="canonical" href="http://localhost:4000/jekyll/update/2018/03/17/wechat-pay-integration.html" />
+<meta property="og:url" content="http://localhost:4000/jekyll/update/2018/03/17/wechat-pay-integration.html" />
+<meta property="og:site_name" content="墙泥 Blog – a Programmer, a Traveller." />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2018-03-17T16:13:12+08:00" />
+<script type="application/ld+json">
+{"description":"本文记录一下微信支付接入过程中踩过的坑。总体来说，微信支付对于想要接入他们的开发人员的所提供的文档有许多不足，很多流程上的介绍让开发人员一头雾水。经过本次对接，记录下过程中的疑问和解决办法，以备后人使用。","author":{"@type":"Person","name":"Johnny Chen - 强尼陈"},"@type":"BlogPosting","url":"http://localhost:4000/jekyll/update/2018/03/17/wechat-pay-integration.html","headline":"微信支付对接","dateModified":"2018-03-17T16:13:12+08:00","datePublished":"2018-03-17T16:13:12+08:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/jekyll/update/2018/03/17/wechat-pay-integration.html"},"@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="墙泥 Blog -- a Programmer, a Traveller." /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">墙泥 Blog -- a Programmer, a Traveller.</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">微信支付对接</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2018-03-17T16:13:12+08:00" itemprop="datePublished">Mar 17, 2018
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <blockquote>
+  <p>本文记录一下微信支付接入过程中踩过的坑。总体来说，微信支付对于想要接入他们的开发人员的所提供的文档有许多不足，很多流程上的介绍让开发人员一头雾水。经过本次对接，记录下过程中的疑问和解决办法，以备后人使用。</p>
+</blockquote>
+
+<ul>
+  <li>首先明确的是，我们本次接入的是微信支付的 <strong><a href="https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=6_1">扫码支付</a></strong> 功能</li>
+</ul>
+
+<h4 id="1-下载微信官方的支付sdk">1. 下载微信官方的<a href="https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=11_1">支付SDK</a></h4>
+<p>由于我们是使用JAVA版本的SDK，因此可以直接使用微信官方提供的maven依赖:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.github.wxpay&lt;/groupId&gt;
+    &lt;artifactId&gt;wxpay-sdk&lt;/artifactId&gt;
+    &lt;version&gt;0.0.3&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre></div></div>
+
+<h4 id="2-着手开发前需要了解的一些信息">2. 着手开发前需要了解的一些信息：</h4>
+
+<ul>
+  <li>微信支付要求对接的商家在开发阶段首先必须完成一系列的<code class="highlighter-rouge">功能验收用例</code>才可以<code class="highlighter-rouge">申请验收完成</code>并上线功能。</li>
+  <li>基本流程和概念可以在官方的文档中了解: <a href="https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=23_1">验收指引</a>；</li>
+  <li>开发过程中所有的操作调用都必须使用沙箱环境的接口，也就是<code class="highlighter-rouge">url中加上/sandboxnew/</code>的路径接口；</li>
+  <li>沙箱环境下的Sign Key和正式环境下的SignKey是不同的，所以，在接下来的开发过程中，首先你要<a href="http://wiki.tapcash.com/wechat-pay/#%E6%B2%99%E7%AE%B1%E7%8E%AF%E5%A2%83%E7%9A%84SignKey%E7%94%9F%E6%88%90">生成一个用于沙箱环境的sign key</a>.</li>
+  <li>开发过程中的接口调用必须严格按照<a href="https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=23_12">验收用例</a>中的要求进行调用，例如：下单接口的支付金额必须是指定的金额，比如3.01元，<code class="highlighter-rouge">否则是不会支付成功的</code>。</li>
+</ul>
+
+<h4 id="3-开始开发代码">3. 开始开发代码：</h4>
+<p>了解了上面的信息以后，就可以按照官方SDK中的demo进行接口调用和业务逻辑开发啦。</p>
+
+<h4 id="4-开发完成开始验收">4. 开发完成，开始验收：</h4>
+<p>实现了官方的验收用例中除了可选case之外的所有case后，关注<a href="https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=23_12">验收用例</a>中的二维码 -&gt; “微信支付商户验收助手”，选择<code class="highlighter-rouge">我的验收</code>，然后<code class="highlighter-rouge">绑定你的商户</code>，开始在本地一个一个把用例文档中的case执行一遍，微信的这个验收助手可以<code class="highlighter-rouge">实时的显示你的验收结果</code>，是否成功，如果出错的话错在哪里，一时找不到原因的话，可以先跑别的用例，<code class="highlighter-rouge">没有要求一定要按照顺序</code>完成用例，只要把所有的必选用例都通过就可以了。</p>
+
+<h4 id="5-正式上线支付功能">5. 正式上线支付功能：</h4>
+<p>完成了所有必选用例的验收以后，等待3个工作日，就可以把你的代码中的useSandbox设置为false，使用<code class="highlighter-rouge">正式的key</code>和<code class="highlighter-rouge">正式的接口</code>，尝试支付<code class="highlighter-rouge">任意金额</code>看看是否可以成功啦！如果成功，证明你已经通过了微信官方的验收，已经正式可以上线你的支付功能了！</p>
+
+<h4 id="附沙箱环境的sign-key生成">附：沙箱环境的Sign Key生成</h4>
+
+<ol>
+  <li>使用官方提供的<a href="https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=20_1">签名校验工具</a>生成一个sign值：</li>
+</ol>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#xml源串</span>
+<span class="o">&lt;</span><span class="n">xml</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">mch_id</span><span class="o">&gt;</span><span class="err">你的微信后台配置中的商户</span><span class="n">ID</span><span class="o">&lt;/</span><span class="n">mch_id</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">nonce_str</span><span class="o">&gt;</span><span class="err">任意随机串</span><span class="o">&lt;/</span><span class="n">nonce_str</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="n">sign</span><span class="o">&gt;</span><span class="err">任意随机串</span><span class="o">&lt;/</span><span class="n">sign</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">xml</span><span class="o">&gt;</span>
+
+<span class="c">#校验结果：</span>
+<span class="err">原</span><span class="n">sign</span><span class="err">值</span><span class="p">:</span><span class="err">你填写的任意随机值</span>
+<span class="err">新</span><span class="n">sign</span><span class="err">值</span><span class="p">:</span><span class="err">这就是你的沙箱环境的</span><span class="n">sign</span> <span class="n">key</span><span class="err">了！把它记下来，在接下来的开发过程中你都要用到它</span>
+</code></pre></div></div>
+
+  </div><a class="u-url" href="/jekyll/update/2018/03/17/wechat-pay-integration.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Johnny Chen - 强尼陈</li><li><a class="u-email" href="mailto:chz0321@gmail.com">chz0321@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/johnnychens"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">johnnychens</span></a></li><li><a href="https://instagram.com/johnnychens"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#instagram"></use></svg> <span class="username">johnnychens</span></a></li><li><a href="https://www.twitter.com/JohnnyChen85"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">JohnnyChen85</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A Blog sharing my daily programming work, major on PHP, JAVA, MySQL, PHPUnit Test, Spring Test.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer></body>
+
+</html>
