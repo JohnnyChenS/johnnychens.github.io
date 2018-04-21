@@ -12,7 +12,20 @@ layout: default
       </time>
       {%- if page.author -%}
         • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">{{ page.author }}</span></span>
-      {%- endif -%}</p>
+      {%- endif -%}
+      <span>
+        {% assign sortedCategories = page.categories | sort %}
+        {% if sortedCategories.size > 0 %}
+        ;<b>&nbsp;&nbsp;Categorized: </b>
+        {% endif %}
+        {% for category in sortedCategories %}
+            <span class="tag">
+                <a href="/category/{{ category }}">#{{ category }}</a>
+            </span>
+        {% endfor %}
+      </span>
+
+    </p>
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">

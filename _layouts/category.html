@@ -1,0 +1,24 @@
+---
+layout: default
+---
+<div class="blog list">
+    <h1>Filed Under <small>#{{ page.tag }}</small></h1> 
+    {% for post in site.categories[page.tag] %}
+    <article class="post-preview" style="margin-bottom: 20px; border-bottom: dashed 1px #BBB;">
+        <a href="{{ post.url | prepend: site.baseurl }}">
+            <h2 class="post-title" style="font-size: 32px !important;">{{ post.title }}</h2> 
+            {% if post.subtitle %}
+                <h3 class="post-subtitle">{{ post.subtitle }}</h3> 
+            {% endif %}
+        </a>
+        <p class="post-meta">
+            <!-- Posted on {{ post.date | date: "%B %-d, %Y" }} -->
+            Posted on {{ post.date | date: "%Y-%m-%d" }}
+        </p>
+        <div class="post-entry" style="padding-bottom:10px;">
+            {{ post.content | strip_html | xml_escape | truncatewords: 5 }}
+            <a href="{{ post.url | prepend: site.baseurl }}" class="post-read-more">[Read&nbsp;More]</a>
+        </div>
+    </article>
+    {% endfor %}
+</div>
