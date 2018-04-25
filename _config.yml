@@ -44,7 +44,7 @@ defaults:
 disqus:
     shortname: johnnychen
 
-google_analytics: UA-53063033-25
+google_analytics: UA-118132286-1
 
 # Build settings
 markdown: kramdown

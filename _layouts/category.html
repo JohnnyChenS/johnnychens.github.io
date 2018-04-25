@@ -12,11 +12,10 @@ layout: default
             {% endif %}
         </a>
         <p class="post-meta">
-            <!-- Posted on {{ post.date | date: "%B %-d, %Y" }} -->
-            Posted on {{ post.date | date: "%Y-%m-%d" }}
+            {{ post.date | date: "%b %-d, %Y" }}
         </p>
         <div class="post-entry" style="padding-bottom:10px;">
-            {{ post.content | strip_html | xml_escape | truncatewords: 5 }}
+            {{ post.excerpt }}
             <a href="{{ post.url | prepend: site.baseurl }}" class="post-read-more">[Read&nbsp;More]</a>
         </div>
     </article>
