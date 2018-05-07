@@ -2,7 +2,7 @@
 layout: post
 title:  "代码重构 -- 设计模式的尝试"
 description: "代码重构中的一次实践，装饰模式的运用 - code refactory, a practise of design pattern - decorator pattern."
-date:   2018-04-09 20:13:01 +0800
+date:   2018-04-21 20:53:12 +0800
 categories: DesignPattern
 ---
 >最近尝试重构了一下之前我在github上的一个[项目](https://github.com/JohnnyChenS/amazon.gcod.git)：调用亚马逊的官方AWS API来生成亚马逊礼物卡。重构的过程中尝试使用了一下设计模式，在多次修改以后，考虑到使用[装饰模式](http://design-patterns.readthedocs.io/zh_CN/latest/structural_patterns/decorator.html)是一个比较合适的结构，于是把代码的重构过程和思路记录下来。
