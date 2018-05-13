@@ -45,13 +45,16 @@ assertEquals(32,$responseJson['age']);
 
 <img src="{{"/assets/img/structure.png" | absolute_url}}" title="结构" width="300px" />
 
+>可以在本文的最后，下载到我的这个Demo项目的代码。
+
 接下来介绍一下配置文件: test/resources/spring-test.xml
 ```xml
 <!-- 首先引入数据库配置文件: -->
 <context:property-placeholder location="classpath:datasource.properties"/>
 <!-- component-scan 初始化测试用例需要扫描的包文件,这样在测试用例启动的时候spring-test框架就会把dao, service, controller 等Bean资源加载到内存中 -->
 <context:component-scan base-package="ny.john.demo.controller, ny.john.demo.service, ny.john.demo.dao"/>
-<!-- 接下来是mysql 和 redis 初始化过程, 声明对应名称的Bean文件，包括redis和mysql的连接池管理 -->
+<!-- 接下来是mysql 和 redis 初始化过程, 声明对应名称的Bean文件，包括redis和mysql的连接池管理, 此处略去 -->
+
 <!-- 最后声明一下框架输出的数据类型，包括了html和Restful结构的json字符串 -->
 <mvc:annotation-driven>
     <mvc:message-converters>
@@ -121,4 +124,6 @@ public void getUser() throws Exception {
 }
 ```
 
-可以通过 [这里](https://github.com/JohnnyChenS/spring-test-demo.git) 下载到我的demo代码
+>可以通过 [这里](https://github.com/JohnnyChenS/spring-test-demo.git) 下载到我的Demo代码
+
+[下一篇](/springtest/2018/05/02/inject-mocks-into-spring-test-controller.html) 将介绍如何使用Mock和InjectMocks注解将一些类中的方法替换掉来完成测试覆盖的。
