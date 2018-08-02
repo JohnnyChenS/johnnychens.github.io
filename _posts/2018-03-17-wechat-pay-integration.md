@@ -24,7 +24,7 @@ date:   2018-03-17 16:13:12 +0800
 - 微信支付要求对接的商家在开发阶段首先必须完成一系列的`功能验收用例`才可以`申请验收完成`并上线功能。
 - 基本流程和概念可以在官方的文档中了解: [验收指引](https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=23_1)；
 - 开发过程中所有的操作调用都必须使用沙箱环境的接口，也就是`url中加上/sandboxnew/`的路径接口；
-- 沙箱环境下的Sign Key和正式环境下的SignKey是不同的，所以，在接下来的开发过程中，首先你要[生成一个用于沙箱环境的sign key](http://wiki.tapcash.com/wechat-pay/#%E6%B2%99%E7%AE%B1%E7%8E%AF%E5%A2%83%E7%9A%84SignKey%E7%94%9F%E6%88%90).
+- 沙箱环境下的Sign Key和正式环境下的SignKey是不同的，所以，在接下来的开发过程中，首先你要生成一个用于沙箱环境的sign key.
 - 开发过程中的接口调用必须严格按照[验收用例](https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=23_12)中的要求进行调用，例如：下单接口的支付金额必须是指定的金额，比如3.01元，`否则是不会支付成功的`。
 
 #### 3. 开始开发代码：
