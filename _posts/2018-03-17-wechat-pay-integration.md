@@ -56,6 +56,7 @@ date:   2018-03-17 16:13:12 +0800
 ```
 
 2. 接下来向这个微信官方接口发送POST请求来获取你沙盒的sign key:
+
 ```python
 https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey
 
@@ -66,8 +67,10 @@ https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey
   <sign>上一步中你得到的那个新sign值</sign>
 </xml>
 ```
+
 接口的响应结果：
-```
+
+```python
 <xml>
   <return_code><![CDATA[SUCCESS]]></return_code>
   <return_msg><![CDATA[ok]]></return_msg>
