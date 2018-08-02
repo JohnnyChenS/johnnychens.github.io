@@ -50,5 +50,25 @@ date:   2018-03-17 16:13:12 +0800
 
 #校验结果：
 原sign值:你填写的任意随机值
-新sign值:这就是你的沙箱环境的sign key了！把它记下来，在接下来的开发过程中你都要用到它
+新sign值:生成了一个新的sign值，这个还不是你的沙箱的key，这个值在接下来的步骤中会用到！
+```
+
+2. 接下来向这个微信官方接口发送POST请求来获取你沙盒的sign key:
+```python
+https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey
+
+#POST请求参数:
+<xml>
+  <mch_id>你的微信后台配置中的商户ID</mch_id>
+  <nonce_str>任意随机串</nonce_str>
+  <sign>上一步中你得到的那个新sign值</sign>
+</xml>
+```
+接口的响应结果：
+```
+<xml>
+  <return_code><![CDATA[SUCCESS]]></return_code>
+  <return_msg><![CDATA[ok]]></return_msg>
+  <sandbox_signkey><![CDATA[这一串就是你的沙箱环境sign key了！把它记下来！]]></sandbox_signkey>
+</xml>
 ```
