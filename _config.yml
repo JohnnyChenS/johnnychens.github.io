@@ -24,6 +24,7 @@ url: "http://blog.chz.ren" # the base hostname & protocol for your site, e.g. ht
 github_username:  johnnychens
 twitter_username: JohnnyChen85
 instagram_username: johnnychens
+lang: zh_CN
 
 paginate: 10
 paginate_path: posts/page:num/
