@@ -3,7 +3,7 @@ layout: post
 title:  "JAVA EE 是什么?"
 description: "what is JAVA EE exactly? - JAVA EE 和JAVA SE的区别"
 date:   2018-12-05 20:17:05 +0800
-categories: SpringBoot
+categories: JAVA
 ---
 
 这两天发现了一个之前一直忽略的问题，JDK的名称是<b>“JAVA SE Developement Kit”</b>; 那么JAVA EE有没有JDK呢？于是查了一下，发现还真的有人问[这个问题](https://stackoverflow.com/questions/10438127/is-there-a-java-ee-jdk), 不过正确答案是 -- <b>没有! </b>不过这个问题的实质是，<b>到底什么是JAVA EE，它和JAVA SE的区别到底是什么？</b>
@@ -18,14 +18,35 @@ categories: SpringBoot
 
 >Apache Tomcat, often referred to as Tomcat Server, is an open-source Java Servlet Container developed by the Apache Software Foundation (ASF). Tomcat implements several Java EE specifications including Java Servlet, JavaServer Pages (JSP), Java EL, and WebSocket, and provides a "pure Java" HTTP web server environment in which Java code can run.
 
-其他的一些参考答案：
+我写了一个Java EE程序来验证我在本地使用``javac``编译时如果不引入tomcat的servlet.jar是否会报错：
+
+```bash
+javac  -sourcepath "./src/"  src/ny/john/demo/Dispatcher.java
+
+src/ny/john/demo/Dispatcher.java:9: 错误: 程序包javax.servlet.http不存在
+
+import javax.servlet.http.HttpServlet;
+                         ^
+```
+果然报错了！于是我在编译时指定classpath，包含了tomcat的servlet包，看看效果：
+
+```sh
+javac -classpath "./web/WEB-INF/lib/mysql-connector-java-5.1.45-bin.jar:/usr/local/src/apache-tomcat-8.0.36/lib/servlet-api.jar" \
+    -sourcepath "./src/"  \
+    -Xlint:unchecked \
+    src/ny/john/demo/Dispatcher.java
+
+```
+编译成功了！
+
+
+<font size="2" color="#777">其他的一些参考答案：</font>
 
 [What exactly is Java EE?](https://stackoverflow.com/questions/7295096/what-exactly-is-java-ee)
 
 [Do I need to install JEE 7 to run servlets and JSP?](https://www.quora.com/Do-I-need-to-install-JEE-7-to-run-servlets-and-JSP)
 
 [What is Java EE?](https://stackoverflow.com/questions/106820/what-is-java-ee)
-
 
 
 

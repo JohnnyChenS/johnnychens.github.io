@@ -50,7 +50,7 @@ assertEquals(32,$responseJson['age']);
 接下来介绍一下配置文件: test/resources/spring-test.xml
 ```xml
 <!-- 首先引入数据库配置文件: -->
-<context:property-placeholder location="classpath:datasource.properties"/>
+<context:property-placeholder location="classpath:application.properties"/>
 <!-- component-scan 初始化测试用例需要扫描的包文件,这样在测试用例启动的时候spring-test框架就会把dao, service, controller 等Bean资源加载到内存中 -->
 <context:component-scan base-package="ny.john.demo.controller, ny.john.demo.service, ny.john.demo.dao"/>
 <!-- 接下来是mysql 和 redis 初始化过程, 声明对应名称的Bean文件，包括redis和mysql的连接池管理, 此处略去 -->
@@ -79,12 +79,19 @@ assertEquals(32,$responseJson['age']);
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) //声明当前类的每一个测试用例执行过后上下文都是不可信的，将会被重新加载；也就是说每一个Test过后都会重新初始化上下文
 @ContextConfiguration(locations = {"classpath:spring-test.xml"}) //指明上下文的配置文件地址
 ```
+>如果是SpringBoot项目的话，可以直接用@SpringBootTest注解
+
+```java
+@RunWith(SpringRunner.class) //SpringRunner是SpringJUnit4ClassRunner的别名
+@ContextConfiguration(locations = {"classpath:spring-test.xml"}) //指明上下文的配置文件地址
+@SpringBootTest
+```
+
 >测试用例初始化方法：
 
 ```java
 @Before //用这个注解标注的方法将会在每一个测试用例执行之前执行，你可以用来放一些初始化的过程，例如：清空数据库
 public void setUp() throws Exception {
-    MockitoAnnotations.initMocks(this);
     mockMvc = MockMvcBuilders.webAppContextSetup(context).build(); //使用我们配置的上下文内容初始化当前项目为一个web应用
     truncateData(); //这个方法里会清空数据库和redis的内容，避免两个测试用例之间的数据互相污染
 }
@@ -108,6 +115,27 @@ private void truncateData() {
 
     stringRedisTemplate.getConnectionFactory().getConnection().flushDb();
 }
+```
+
+```java
+//<!-- 2018-12-11 更新 -->
+//最近知道，测试用例的webContext可以使用 @AutoConfigureMockMvc 注解自动初始化
+@ContextConfiguration(locations = {"classpath:spring-test.xml"})
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@AutoConfigureMockMvc //自动生成上下文
+public class ControllerTest {
+    @Resource
+    private MockMvc mockMvc;
+
+    @Before
+    public void setUp() {
+        //使用@AutoConfigureMockMvc注解可以自动生成上下文，省去显式赋值的方式
+        //mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+        truncateData();
+    }
+}
+//<!-- 更新结束 -->
 ```
 
 了解了初始化过程以后，就可以开始写测试用例啦，简单的测试用例编写如下：
