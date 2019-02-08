@@ -37,10 +37,10 @@ javac -classpath "./web/WEB-INF/lib/mysql-connector-java-5.1.45-bin.jar:/usr/loc
     src/ny/john/demo/Dispatcher.java
 
 ```
-编译成功了！
+编译成功！
 
 
-<font size="2" color="#777">其他的一些参考答案：</font>
+<font size="2" color="#777">一些其他参考答案：</font>
 
 [What exactly is Java EE?](https://stackoverflow.com/questions/7295096/what-exactly-is-java-ee)
 
