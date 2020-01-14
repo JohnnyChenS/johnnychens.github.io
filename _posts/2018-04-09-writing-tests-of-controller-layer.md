@@ -32,7 +32,7 @@ assertEquals(32,$responseJson['age']);
 
 好了，了解完上面的使用场景，接下来就介绍一下我在开发JAVA项目时，如何实现以上测试用例的覆盖的。
 
-首先导入Spring Test的依赖包
+首先导入Spring Test的依赖包（以spring boot项目为例）
 ```
 <dependency>
     <groupId>org.springframework.boot</groupId>
@@ -43,12 +43,19 @@ assertEquals(32,$responseJson['age']);
 
 建立一个入下图结构的Demo项目：
 
-<img src="{{"/assets/img/structure.png" | absolute_url}}" title="结构" width="300px" />
+<img src="{{"/assets/img/structure.png" | absolute_url}}" title="结构" width="400px" />
 
 >可以在本文的最后，下载到我的这个Demo项目的代码。
 
-接下来介绍一下配置文件: test/resources/spring-test.xml
+
+```java
+#Spring Boot的测试用例直接使用@SpringBootTest就可以了
+//接下来介绍一下配置文件: test/resources/spring-test.xml
+```
+
 ```xml
+<!-- XML的配置方式适用于SpringMVC的测试用例，如果是SpringBoot测试这里就别看了 -->
+
 <!-- 首先引入数据库配置文件: -->
 <context:property-placeholder location="classpath:application.properties"/>
 <!-- component-scan 初始化测试用例需要扫描的包文件,这样在测试用例启动的时候spring-test框架就会把dao, service, controller 等Bean资源加载到内存中 -->
@@ -74,18 +81,22 @@ assertEquals(32,$responseJson['age']);
 >几个重要的注解：
 
 ```java
+//这些注解和配置适用于SpringMVC的测试用例, Spring Boot的测试用例直接看下面的例子;
+
 @RunWith(SpringJUnit4ClassRunner.class) //声明当前类文件将使用SpringJUnit来启动
 @WebAppConfiguration //声明当前类文件将加载Spring的Web应用上下文配置，也就是说我们的Spring mvc结构的上下文会被我们的测试用例理解
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) //声明当前类的每一个测试用例执行过后上下文都是不可信的，将会被重新加载；也就是说每一个Test过后都会重新初始化上下文
 @ContextConfiguration(locations = {"classpath:spring-test.xml"}) //指明上下文的配置文件地址
 ```
->如果是SpringBoot项目的话，可以直接用@SpringBootTest注解
+>SpringBoot项目直接使用@SpringBootTest注解
 
 ```java
 @RunWith(SpringRunner.class) //SpringRunner是SpringJUnit4ClassRunner的别名
-@ContextConfiguration(locations = {"classpath:spring-test.xml"}) //指明上下文的配置文件地址
+//@ContextConfiguration(locations = {"classpath:spring-test.xml"}) //不需要xml配置文件
 @SpringBootTest
 ```
+
+>有一个要点是，Spring Boot的测试用例，Test的结构必须和项目结构相同：例如，业务代码根路径是ny.john.demo，那么test目录下的测试用例也必须建立在ny.john.demo目录下（参见上文中的目录结构图）
 
 >测试用例初始化方法：
 
@@ -120,7 +131,6 @@ private void truncateData() {
 ```java
 //<!-- 2018-12-11 更新 -->
 //最近知道，测试用例的webContext可以使用 @AutoConfigureMockMvc 注解自动初始化
-@ContextConfiguration(locations = {"classpath:spring-test.xml"})
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc //自动生成上下文
